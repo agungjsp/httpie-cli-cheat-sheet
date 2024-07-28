@@ -28,7 +28,7 @@
 | **Session** | Start session | Begin a new session | `http --session=mysession example.com` |
 | | Use session | Use existing session | `http --session=mysession example.com` |
 
-## Examples of Typical Use Cases
+### Examples of Typical Use Cases
 
 | Use Case | Command |
 |----------|---------|
@@ -39,6 +39,34 @@
 | GET with query parameters | `http https://api.github.com/search/repositories q==httpie language==python` |
 | POST with form data | `http -f POST https://httpbin.org/post name="John Doe" age:=30 newsletter:=true` |
 | GET with custom headers | `http https://api.example.com/data "Authorization:Bearer mytoken" "Accept:application/json"` |
+
+## Handling Complex Data Structures
+
+### Objects, Arrays, and Arrays of Objects
+
+| Data Structure | Command/Syntax | Description |
+|----------------|----------------|-------------|
+| **Array** | `http POST example.com fruits:='["apple", "banana", "cherry"]'` | Send a JSON array |
+| **Object** | `http POST example.com name=John age:=30 "address[street]"="123 Main St" "address[city]"="Anytown"` | Send a JSON object |
+| **Array of Objects** | `http POST example.com users:='[{"name": "John", "age": 30}, {"name": "Jane", "age": 28}]'` | Send an array of JSON objects |
+
+### Examples of Complex Data Structures
+
+| Use Case | Command |
+|----------|---------|
+| POST request with nested object | `http POST https://api.example.com/users name=John age:=30 "address[street]"="123 Main St" "address[city]"="Anytown" "address[zip]"="12345"` |
+| POST request with array | `http POST https://api.example.com/todos tasks:='["Buy groceries", "Clean house", "Walk dog"]'` |
+| POST request with array of objects | `http POST https://api.example.com/orders items:='[{"product": "Widget", "quantity": 2, "price": 9.99}, {"product": "Gadget", "quantity": 1, "price": 24.99}]'` |
+| PUT request updating nested fields | `http PUT https://api.example.com/users/123 "preferences[theme]"=dark "preferences[notifications][email]"=true "preferences[notifications][sms]"=false` |
+
+## Tips for Working with Complex Data
+
+1. Use single quotes to wrap JSON arrays and objects to avoid shell interpretation.
+2. For deeply nested structures, consider using a JSON file: `http POST example.com < data.json`
+3. Use `:=` for numbers and booleans to ensure they're sent as JSON, not strings.
+4. For very complex structures, you can use inline JSON: `http POST example.com data:='{"key": {"nested": [1, 2, 3]}}'`
+
+Remember that when sending complex data structures, it's crucial to format them correctly to ensure they're interpreted as valid JSON by the server.
 
 ## Tips for Advanced Usage
 
